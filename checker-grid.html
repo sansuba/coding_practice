@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, initial-scale=1.0">
+    <title>Checkers</title>
+
+    <style>
+        .container {
+            padding: 20px;
+            background-color: brown;
+            height: calc(100vh - 60px);
+        }
+
+        .container-grid {
+            background-color: whitesmoke;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container-cell {
+            background-color: teal;
+            display: flex;
+            flex: 1;
+            border: solid 1px white;
+            color: white;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container-h-cell {
+            height: calc(100% / 12);
+            display: flex;
+        }
+
+        .evenh.oddv {
+            background-color: white;
+            color: black;
+        }
+
+        .evenv.oddh {
+            background-color: white;
+            color: black;
+        }
+    </style>
+
+    <script>
+        function initializeGrid() {
+            let docGrid = document.getElementById("container-grid");
+
+            for (let indexH = 0; indexH < 12; indexH++) {
+                let elemH = document.createElement("div");
+                elemH.setAttribute("class", "container-h-cell");
+                for (let indexV = 0; indexV < 12; indexV++) {
+                    let elem = document.createElement("div");
+                    let attribute = "container-cell";
+
+                    if ((indexV % 2) == 0) {
+                        attribute = attribute + " evenh";
+                    } else {
+                        attribute = attribute + " oddh";
+                    }
+
+                    if ((indexH % 2) == 0) {
+                        attribute = attribute + " evenv";
+                    } else {
+                        attribute = attribute + " oddv";
+                    }
+
+                    elem.setAttribute("class", attribute);
+                    elemH.appendChild(elem);
+
+                    elem.innerHTML = (indexH * 12) + indexV + 1;
+                }
+                docGrid.appendChild(elemH);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="container-grid" id="container-grid">
+
+        </div>
+    </div>
+
+    <script>
+        initializeGrid();
+    </script>
+</body>
+
+</html>
