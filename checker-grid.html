@@ -7,10 +7,23 @@
     <title>Checkers</title>
 
     <style>
+        body {
+            display: flex;
+            flex-direction: row;
+        }
+
         .container {
             padding: 20px;
             background-color: brown;
             height: calc(100vh - 60px);
+            width: calc(100vh - 60px);
+        }
+
+        .operation {
+            background-color: blueviolet;
+            height: calc(100vh - 20px);
+            flex: 1;
+            margin-left: 10px;
         }
 
         .container-grid {
@@ -27,8 +40,6 @@
             flex: 1;
             border: solid 1px white;
             color: white;
-            align-items: center;
-            justify-content: center;
         }
 
         .container-h-cell {
@@ -44,6 +55,52 @@
         .evenv.oddh {
             background-color: white;
             color: black;
+        }
+
+        .inner-content {
+            width: 100%;
+            height: 100%;
+            font-size: 12px;
+            margin: 5px;
+        }
+
+        .button-a {
+            background: url('button_a.png') no-repeat;
+            background-size: contain;
+            height: 44px;
+            margin-left: 5px;
+        }
+
+        .button-b {
+            background: url('button_b.png') no-repeat;
+            background-size: contain;
+            height: 44px;
+            margin-left: 5px;
+        }
+
+        .button-c {
+            background: url('button_c.png') no-repeat;
+            background-size: contain;
+            height: 44px;
+            margin-left: 5px;
+        }
+
+        .palyer-button-1 {
+            background: url('glass_button_miyuru.png') no-repeat;
+            height: 44px;
+            margin-bottom: 10px;
+        }
+
+        .palyer-button-2 {
+            background: url('glass_button_subhash.png') no-repeat;
+            height: 44px;
+            margin-bottom: 10px;
+        }
+
+        .palyer-button-3 {
+            background: url('glass_button_minoli.png') no-repeat;
+            height: 44px;
+            margin-bottom: 10px;
         }
     </style>
 
@@ -73,9 +130,73 @@
                     elem.setAttribute("class", attribute);
                     elemH.appendChild(elem);
 
-                    elem.innerHTML = (indexH * 12) + indexV + 1;
+                    idx = 0;
+                    if (indexH % 2 == 0) {
+                        idx = (145 - ((indexH * 12) + indexV + 1));
+                    } else {
+                        idx = (145 - ((indexH * 12) + ((11 - indexV) + 1)));
+                    }
+                    elem.setAttribute("id", "outer-" + idx);
+
+                    elem.appendChild(addInnerDiv(idx));
                 }
                 docGrid.appendChild(elemH);
+            }
+        }
+
+        function addInnerDiv(id) {
+            let elem = document.createElement("div");
+            elem.setAttribute("id", "inner-" + id);
+            elem.setAttribute("class", "inner-content");
+            elem.innerHTML = id;
+            return elem;
+        }
+
+        function addButtonA(elem) {
+            let elemPlayer = document.getElementById('player-a');
+            elem.appendChild(elemPlayer);
+        }
+
+        function addButtonB(elem) {
+            let elemPlayer = document.getElementById('player-b');
+            elem.appendChild(elemPlayer);
+        }
+
+        function addButtonC(elem) {
+            let elemPlayer = document.getElementById('player-c');
+            // document.removeChild(elemPlayer);
+            elem.appendChild(elemPlayer);
+        }
+
+        function diceNumber() {
+            let num = Math.floor(Math.random() * 7);
+            if (num == 0) {
+                num = 1;
+            }
+            return num;
+        }
+
+        function changeButton(player) {
+            let randPosition = diceNumber();
+
+            if (player === 'A') {
+                let elem = document.getElementById('player-a');
+                let parentId = elem.parentElement.id.replace("inner-", "");
+                let numPosition = parseInt(parentId) + randPosition;
+                let newPosition = document.getElementById('inner-' + numPosition);
+                addButtonA(newPosition);
+            } else if (player === 'B') {
+                let elem = document.getElementById('player-b');
+                let parentId = elem.parentElement.id.replace("inner-", "");
+                let numPosition = parseInt(parentId) + randPosition;
+                let newPosition = document.getElementById('inner-' + numPosition);
+                addButtonB(newPosition);
+            } else {
+                let elem = document.getElementById('player-c');
+                let parentId = elem.parentElement.id.replace("inner-", "");
+                let numPosition = parseInt(parentId) + randPosition;
+                let newPosition = document.getElementById('inner-' + numPosition);
+                addButtonC(newPosition);
             }
         }
     </script>
@@ -84,13 +205,23 @@
 <body>
 
     <div class="container">
-        <div class="container-grid" id="container-grid">
+        <div class="container-grid" id="container-grid"></div>
+    </div>
+    <div class="operation">
+        <div class="button-a" id="player-a"></div>
+        <div class="button-c" id="player-b"></div>
+        <div class="button-b" id="player-c"></div>
 
-        </div>
+        <div class="palyer-button-1" onclick="changeButton('A')">&nbsp;</div>
+        <div class="palyer-button-2" onclick="changeButton('B')">&nbsp;</div>
+        <div class="palyer-button-3" onclick="changeButton('C')">&nbsp;</div>
     </div>
 
     <script>
         initializeGrid();
+        addButtonA(document.getElementById('inner-1'));
+        addButtonB(document.getElementById('inner-1'));
+        addButtonC(document.getElementById('inner-1'));
     </script>
 </body>
 
