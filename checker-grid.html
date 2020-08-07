@@ -59,7 +59,7 @@
         .inner-content {
             width: 100%;
             height: 100%;
-            font-size: 12px;
+            font-size: 10px;
             margin: 5px;
         }
 
@@ -88,30 +88,142 @@
             background: url('glass_button_miyuru.png') no-repeat;
             height: 44px;
             margin-bottom: 10px;
+            flex: 1;
         }
 
         .palyer-button-2 {
             background: url('glass_button_subhash.png') no-repeat;
             height: 44px;
             margin-bottom: 10px;
+            flex: 1;
         }
 
         .palyer-button-3 {
             background: url('glass_button_minoli.png') no-repeat;
             height: 44px;
             margin-bottom: 10px;
+            flex: 1;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 20px;
+            padding-left: 20px;
+        }
+
+        #dice-number {
+            text-align: center;
+            font-size: x-large;
+            margin-top: 20px;
         }
 
         .snake-1 {
             position: absolute;
             width: auto;
-            top: 82px;
+            top: 94px;
             left: 86px;
+            height: 117px;
+        }
+
+        .snake-2 {
+            position: absolute;
+            width: auto;
+            top: 354px;
+            left: 287px;
+            height: 117px;
+            transform: rotateY(180deg);
+        }
+
+        .snake-3 {
+            position: absolute;
+            width: auto;
+            top: 183px;
+            left: 428px;
+            height: 117px;
+        }
+
+        .snake-4 {
+            position: absolute;
+            width: auto;
+            top: 78px;
+            left: 306px;
+            height: 117px;
+            transform: rotateZ(23deg);
+        }
+
+        .snake-5 {
+            position: absolute;
+            width: auto;
+            top: 433px;
+            left: 105px;
+            height: 117px;
+            transform: rotateZ(24deg) rotateY(23deg);
+        }
+
+        .ladder-1 {
+            position: absolute;
+            width: auto;
+            top: 452px;
+            left: 198px;
+            height: 117px;
+            transform: rotateZ(23deg);
+        }
+
+        .ladder-2 {
+            position: absolute;
+            width: auto;
+            top: 307px;
+            left: 88px;
+            height: 117px;
+        }
+
+        .ladder-3 {
+            position: absolute;
+            width: auto;
+            top: 150px;
+            left: 352px;
+            height: 117px;
+            transform: rotateZ(45deg);
+        }
+
+        .ladder-4 {
+            position: absolute;
+            width: auto;
+            top: 250px;
+            left: 304px;
+            height: 117px;
+            transform: rotateZ(54deg);
+        }
+
+        .ladder-5 {
+            position: absolute;
+            width: auto;
+            top: 84px;
+            left: 240px;
             height: 117px;
         }
     </style>
 
     <script>
+        let nextPlayer = 'A';
+
+        const snakeGrid = {
+            128: 115,
+            122: 101,
+            106: 81,
+            64: 43,
+            51: 20
+        };
+
+        const ladderGrid = {
+            21: 44,
+            50: 74,
+            101: 125,
+            68: 79,
+            91: 113
+        };
+
         function initializeGrid() {
             let docGrid = document.getElementById("container-grid");
 
@@ -183,28 +295,96 @@
             return num;
         }
 
+        function moveTo() {
+            var elem = document.getElementById("myAnimation");
+            var pos = 0;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (pos == 350) {
+                    clearInterval(id);
+                } else {
+                    pos++;
+                    elem.style.top = pos + 'px';
+                    elem.style.left = pos + 'px';
+                }
+            }
+        }
+
         function changeButton(player) {
             let randPosition = diceNumber();
 
             if (player === 'A') {
+                if (nextPlayer != 'A') {
+                    document.getElementById('error-sound').play();
+                    return;
+                }
+                nextPlayer = 'B';
+
                 let elem = document.getElementById('player-a');
                 let parentId = elem.parentElement.id.replace("inner-", "");
                 let numPosition = parseInt(parentId) + randPosition;
+                if (snakeGrid[numPosition]) {
+                    numPosition = snakeGrid[numPosition];
+                    document.getElementById('snake-byte').play();
+                }
+
+                if (ladderGrid[numPosition]) {
+                    numPosition = ladderGrid[numPosition];
+                    document.getElementById('ladder-up').play();
+                }
+
                 let newPosition = document.getElementById('inner-' + numPosition);
+
                 addButtonA(newPosition);
             } else if (player === 'B') {
+                if (nextPlayer != 'B') {
+                    document.getElementById('error-sound').play();
+                    return;
+                }
+                nextPlayer = 'C';
+
                 let elem = document.getElementById('player-b');
                 let parentId = elem.parentElement.id.replace("inner-", "");
                 let numPosition = parseInt(parentId) + randPosition;
+                if (snakeGrid[numPosition]) {
+                    numPosition = snakeGrid[numPosition];
+                    document.getElementById('snake-byte').play();
+                }
+
+                if (ladderGrid[numPosition]) {
+                    numPosition = ladderGrid[numPosition];
+                    document.getElementById('ladder-up').play();
+                }
+
                 let newPosition = document.getElementById('inner-' + numPosition);
+
                 addButtonB(newPosition);
             } else {
+                if (nextPlayer != 'C') {
+                    document.getElementById('error-sound').play();
+                    return;
+                }
+                nextPlayer = 'A';
+
                 let elem = document.getElementById('player-c');
                 let parentId = elem.parentElement.id.replace("inner-", "");
                 let numPosition = parseInt(parentId) + randPosition;
+                if (snakeGrid[numPosition]) {
+                    numPosition = snakeGrid[numPosition];
+                    document.getElementById('snake-byte').play();
+                }
+
+                if (ladderGrid[numPosition]) {
+                    numPosition = ladderGrid[numPosition];
+                    document.getElementById('ladder-up').play();
+                }
+
                 let newPosition = document.getElementById('inner-' + numPosition);
+
                 addButtonC(newPosition);
             }
+
+            document.getElementById("dice-number").innerHTML = "Dice value " + randPosition;
         }
     </script>
 </head>
@@ -213,16 +393,30 @@
 
     <div class="container">
         <div class="container-grid" id="container-grid"></div>
-        <img class="snake-1" src="cobra.png" />
+        <img class="snake-1" src="cobra-2.png" />
+        <img class="snake-2" src="cobra-2.png" />
+        <img class="snake-3" src="cobra-3.png" />
+        <img class="snake-4" src="cobra-3.png" />
+        <img class="snake-5" src="cobra-2.png" />
+        <img class="ladder-1" src="ladder.png" />
+        <img class="ladder-2" src="ladder.png" />
+        <img class="ladder-3" src="ladder.png" />
+        <img class="ladder-4" src="ladder.png" />
+        <img class="ladder-5" src="ladder.png" />
     </div>
     <div class="operation">
         <div class="button-a" id="player-a"></div>
         <div class="button-c" id="player-b"></div>
         <div class="button-b" id="player-c"></div>
 
-        <div class="palyer-button-1" onclick="changeButton('A')">&nbsp;</div>
-        <div class="palyer-button-2" onclick="changeButton('B')">&nbsp;</div>
-        <div class="palyer-button-3" onclick="changeButton('C')">&nbsp;</div>
+        <div class="info-container">
+            <div id="dice-number"></div>
+        </div>
+        <div class="button-container">
+            <div class="palyer-button-1" onclick="changeButton('A')">&nbsp;</div>
+            <div class="palyer-button-2" onclick="changeButton('B')">&nbsp;</div>
+            <div class="palyer-button-3" onclick="changeButton('C')">&nbsp;</div>
+        </div>
 
     </div>
 
@@ -232,6 +426,10 @@
         addButtonB(document.getElementById('inner-1'));
         addButtonC(document.getElementById('inner-1'));
     </script>
+
+    <audio id="error-sound" src="sound.mp3"></audio>
+    <audio id="snake-byte" src="snake-hiss.mp3"></audio>
+    <audio id="ladder-up" src="ladder-up.mp3"></audio>
 </body>
 
 </html>
